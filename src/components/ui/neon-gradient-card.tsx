@@ -70,8 +70,8 @@ interface NeonGradientCardProps {
 const NeonGradientCard: React.FC<NeonGradientCardProps> = ({
 	className,
 	children,
-	borderSize = 2,
-	borderRadius = 20,
+	borderSize = 0,
+	borderRadius = 0,
 	neonColors = {
 		firstColor: '#ff00aa',
 		secondColor: '#00FFF1',
@@ -118,12 +118,14 @@ const NeonGradientCard: React.FC<NeonGradientCardProps> = ({
 					'--card-content-radius': `${borderRadius - borderSize}px`,
 					'--pseudo-element-background-image': `linear-gradient(0deg, ${neonColors.firstColor}, ${neonColors.secondColor})`,
 					'--pseudo-element-width': `${dimensions.width + borderSize * 2}px`,
-					'--pseudo-element-height': `${dimensions.height + borderSize * 2}px`,
+					'--pseudo-element-height': `${
+						dimensions.height / 2 + borderSize * 2
+					}px`,
 					'--after-blur': `${dimensions.width / 3}px`,
 				} as CSSProperties
 			}
 			className={cn(
-				'relative z-10 h-full w-full rounded-[var(--border-radius)]',
+				'relative h-full w-full rounded-[var(--border-radius)]',
 				className
 			)}
 			{...props}
@@ -148,4 +150,4 @@ const NeonGradientCard: React.FC<NeonGradientCardProps> = ({
 	)
 }
 
-export { NeonGradientCard }
+export default { NeonGradientCard }

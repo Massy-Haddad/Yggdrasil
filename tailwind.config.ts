@@ -133,27 +133,61 @@ const config = {
 						'background-position': 'calc(100% + var(--shimmer-width)) 0',
 					},
 				},
-				"border-beam": {
-          			"100%": {
-            			"offset-distance": "100%",
-          			},
-        		},
-				"background-position-spin": {
-					"0%": { backgroundPosition: "top center" },
-					"100%": { backgroundPosition: "bottom center" },
+				'border-beam': {
+					'100%': {
+						'offset-distance': '100%',
+					},
 				},
+				'background-position-spin': {
+					'0%': { backgroundPosition: 'top center' },
+					'100%': { backgroundPosition: 'bottom center' },
+				},
+				'meteor': {
+					'0%': { transform: 'rotate(215deg) translateX(0)', opacity: '1' },
+					'70%': { opacity: '1' },
+					'100%': {
+						transform: 'rotate(215deg) translateX(-500px)',
+						opacity: '0',
+					},
+				},
+				'image-glow': {
+					'0%': {
+					   'opacity': '0',
+					   'animation-timing-function': 'cubic-bezier(0.74, 0.25, 0.76, 1)',
+					},
+					'10%': {
+					   'opacity': '0.7',
+					   'animation-timing-function': 'cubic-bezier(0.12, 0.01, 0.08, 0.99)',
+					},
+					'100%': {
+					   opacity: '0.4',
+					},
+				 },
+				 'fade-in': {
+					from: { opacity: '0', transform: 'translateY(-10px)' },
+					to: { opacity: '1', transform: 'none' },
+				 },
+				 'fade-up': {
+					from: { opacity: '0', transform: 'translateY(20px)' },
+					to: { opacity: '1', transform: 'none' },
+				 },
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'shimmer': 'shimmer 8s infinite',
-				'border-beam': "border-beam calc(var(--duration)*1s) infinite linear",
-				'backgroundPositionSpin': "background-position-spin 3000ms infinite alternate",
+				'border-beam': 'border-beam calc(var(--duration)*1s) infinite linear',
+				'backgroundPositionSpin': 'background-position-spin 3000ms infinite alternate',
+				'meteor': "meteor 5s linear infinite",
+				'image-glow': 'image-glow 4100ms 600ms ease-out forwards',
+				'fade-in': 'fade-in 1000ms var(--animation-delay, 0ms) ease forwards',
+				'fade-up': 'fade-up 1000ms var(--animation-delay, 0ms) ease forwards',
+
 			},
 		},
 	},
 	plugins: [require('tailwindcss-animate')],
 } satisfies Config
-  
+
 
 export default config

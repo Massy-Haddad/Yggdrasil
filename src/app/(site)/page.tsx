@@ -1,17 +1,26 @@
-import TitleSection from '@/components/landing-page/title-section'
+import { Hero } from '@/components/landing-page'
+import { Meteors, Particles } from '@/components/ui'
 
 const HomePage = () => {
 	return (
 		<>
-			<section className="overflow-hidden px-4 sm:px-6 pt-10 sm:flex sm:flex-col gap-4 md:justify-center md:items-center">
-				<TitleSection
-					pill="🌿 Introducing Yggdrasil"
-					title={'All-In-One Collaboration \nand Productivity Platform'}
-					subheading={
-						'From anime and gaming to fitness, in one customizable app \nOrganize and track all your hobbies'
-					}
-				/>
-			</section>
+			<Hero
+				pill="🌿 Introducing Yggdrasil"
+				title={'Your All-in-One \nPassion Tracker'}
+				subheading={
+					'From anime and gaming to fitness, in one customizable app \nOrganize and track all your hobbies'
+				}
+			/>
+
+			<Particles
+				className="absolute inset-0 -z-10"
+				quantity={50}
+				ease={70}
+				size={0.05}
+				staticity={40}
+				color="#ffffff"
+			/>
+			{/* <Meteors number={30} /> */}
 		</>
 	)
 }
