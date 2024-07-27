@@ -32,7 +32,7 @@ const menuItem = [
 	},
 ]
 
-export default function Header() {
+const Header = () => {
 	const mobilenavbarVariant = {
 		initial: {
 			opacity: 0,
@@ -185,3 +185,5 @@ export default function Header() {
 		</>
 	)
 }
+
+export default Header

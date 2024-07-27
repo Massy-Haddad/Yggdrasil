@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Header } from '@/components'
+import { Header, Footer } from '@/components'
 
 interface MarketingLayoutProps {
 	children: React.ReactNode
@@ -11,6 +11,7 @@ const LandingPageLayout = ({ children }: MarketingLayoutProps) => {
 		<>
 			<Header />
 			<main className="mx-auto flex-1 overflow-hidden">{children}</main>
+			<Footer />
 		</>
 	)
 }
