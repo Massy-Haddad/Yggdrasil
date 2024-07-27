@@ -1,13 +1,28 @@
-import React from 'react'
+import { Hero } from '@/components/landing-page'
+import { Meteors, Particles } from '@/components/ui'
 
-const LandingPage = () => {
+const HomePage = () => {
 	return (
-		<section>
-			<div className="overflow-hidden px-4 sm:px-6 mt-10 sm:flex sm:flex-col gap-4 md: justify-center md:items-center">
-				Home
-			</div>
-		</section>
+		<>
+			<Hero
+				pill="🌿 Introducing Yggdrasil"
+				title={'Your All-in-One \nPassion Tracker'}
+				subheading={
+					'From anime and gaming to fitness, in one customizable app \nOrganize and track all your hobbies'
+				}
+			/>
+
+			<Particles
+				className="absolute inset-0 -z-10"
+				quantity={50}
+				ease={70}
+				size={0.05}
+				staticity={40}
+				color="#ffffff"
+			/>
+			{/* <Meteors number={30} /> */}
+		</>
 	)
 }
 
-export default LandingPage
+export default HomePage
