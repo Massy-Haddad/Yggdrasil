@@ -1,40 +1,25 @@
 'use server'
 import z from 'zod'
-import { FormSchema, SignUpFormSchema } from '../types'
-
-import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
+import { FormSchema } from '../types'
 
 import { createClient } from '@/utils/supabase/server'
 
 export async function login({ email, password }: z.infer<typeof FormSchema>) {
 	const supabase = createClient()
 
-	// type-casting here for convenience
-	// in practice, you should validate your inputs
-	const data = {
-		email: email,
-		password: password,
-	}
-
-	const { error } = await supabase.auth.signInWithPassword(data)
+	const { error } = await supabase.auth.signInWithPassword({ email, password })
 
 	if (error) return error.message
-	// revalidatePath('/', 'layout')
-	// redirect('/')
 }
 
 export async function signup({ email, password }: z.infer<typeof FormSchema>) {
 	const supabase = createClient()
 
-	// type-casting here for convenience
-	// in practice, you should validate your inputs
-	const data = {
-		email: email,
-		password: password,
-	}
+	const { data } = await supabase.from('users').select('*').eq('email', email)
+	console.log(data)
 
-	const { error } = await supabase.auth.signUp({
+	if (data?.length) return { error: { message: 'User already exists', data } }
+	const response = await supabase.auth.signUp({
 		email,
 		password,
 		options: {
@@ -42,8 +27,6 @@ export async function signup({ email, password }: z.infer<typeof FormSchema>) {
 		},
 	})
 
-	if (error) return error.message
-
-	// revalidatePath('/', 'layout')
-	// redirect('/')
+	console.log(response)
+	return response
 }

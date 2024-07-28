@@ -49,7 +49,7 @@ const UserSignInForm = ({ className, ...props }: UserSignInFormProps) => {
 		const error = await login(formData)
 
 		if (error) {
-			setSubmitError(error.message)
+			setSubmitError(error)
 			form.reset()
 			return
 		}

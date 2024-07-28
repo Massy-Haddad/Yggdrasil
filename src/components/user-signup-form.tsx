@@ -32,6 +32,7 @@ export default function UserSignUpForm({
 }: UserSignUpFormProps) {
 	const router = useRouter()
 	const [submitError, setSubmitError] = useState('')
+	const [confirmation, setConfirmation] = useState(false)
 
 	const form = useForm<z.infer<typeof SignUpFormSchema>>({
 		mode: 'onChange',
@@ -45,14 +46,14 @@ export default function UserSignUpForm({
 
 	const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false)
 	const isLoading = form.formState.isSubmitting
-
 	const onSubmit = async ({ email, password }: z.infer<typeof FormSchema>) => {
-		const error = await signup({ email, password })
+		const { error } = await signup({ email, password })
 		if (error) {
-			setSubmitError(error)
+			setSubmitError(error.message)
 			form.reset()
 			return
 		}
+		setConfirmation(true)
 	}
 
 	async function onSignUpGithub() {
