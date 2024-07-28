@@ -1,3 +1,4 @@
+export { default as Input } from './input'
 export { default as Meteors } from './meteors'
 export { default as Particles } from './particles'
 export { default as BorderBeam } from './border-beam'

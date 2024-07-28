@@ -108,7 +108,7 @@ const Header = () => {
 
 					<div className="ml-auto flex h-full items-center">
 						<Link className="mr-6 text-sm" href="/signin">
-							Log in
+							Login
 						</Link>
 						<Link
 							className={cn(
