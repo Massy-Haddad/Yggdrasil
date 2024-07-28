@@ -47,9 +47,9 @@ export default function UserSignUpForm({
 	const isLoading = form.formState.isSubmitting
 
 	const onSubmit = async ({ email, password }: z.infer<typeof FormSchema>) => {
-		const { error } = await signup({ email, password })
+		const error = await signup({ email, password })
 		if (error) {
-			setSubmitError(error.message)
+			setSubmitError(error)
 			form.reset()
 			return
 		}

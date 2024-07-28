@@ -46,11 +46,12 @@ const UserSignInForm = ({ className, ...props }: UserSignInFormProps) => {
 	const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (
 		formData
 	) => {
-		const { error }: any = await login(formData)
+		const error = await login(formData)
 
 		if (error) {
-			form.reset()
 			setSubmitError(error.message)
+			form.reset()
+			return
 		}
 
 		router.replace('/dashboard')
