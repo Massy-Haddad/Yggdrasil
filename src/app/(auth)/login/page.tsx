@@ -6,7 +6,7 @@ import { ChevronLeft } from 'lucide-react'
 import { UserSignInForm } from '@/components'
 import { buttonVariants } from '@/components/ui/button'
 
-const LoginPage = () => {
+const Page = () => {
 	return (
 		<div className="container flex h-screen w-screen flex-col items-center justify-center">
 			<Link
@@ -49,4 +49,4 @@ const LoginPage = () => {
 	)
 }
 
-export default LoginPage
+export default Page

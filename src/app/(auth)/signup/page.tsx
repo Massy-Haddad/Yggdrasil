@@ -46,7 +46,7 @@ const SignUpPage = () => {
 				<UserSignUpForm />
 				<p className="text-muted-foreground px-8 text-center text-sm">
 					<Link
-						href="/signin"
+						href="/login"
 						className="hover:text-brand underline underline-offset-4"
 					>
 						Already have an account? Sign In
