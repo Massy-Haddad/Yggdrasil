@@ -13,13 +13,15 @@ export async function login({ email, password }: z.infer<typeof FormSchema>) {
 }
 
 export async function signup({ email, password }: z.infer<typeof FormSchema>) {
+	console.log('🔐 signup called')
 	const supabase = createClient()
 
 	const { data } = await supabase.from('users').select('*').eq('email', email)
 	console.log(data)
 
-	if (data?.length) return { error: { message: 'User already exists', data } }
-	const response = await supabase.auth.signUp({
+	if (data?.length)
+		return { error: { message: 'User with this email already exists' } }
+	const { data: responseData } = await supabase.auth.signUp({
 		email,
 		password,
 		options: {
@@ -27,6 +29,6 @@ export async function signup({ email, password }: z.infer<typeof FormSchema>) {
 		},
 	})
 
-	console.log(response)
-	return response
+	console.log(responseData)
+	return responseData
 }

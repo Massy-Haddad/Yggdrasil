@@ -20,9 +20,10 @@ import {
 	FormDescription,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui'
-import { Loader2 } from 'lucide-react'
+import { Loader2, MailCheck } from 'lucide-react'
 import { GitHubLogoIcon } from '@radix-ui/react-icons'
 import { buttonVariants } from '@/components/ui/button'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 interface UserSignUpFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -33,6 +34,12 @@ export default function UserSignUpForm({
 	const router = useRouter()
 	const [submitError, setSubmitError] = useState('')
 	const [confirmation, setConfirmation] = useState(false)
+	const searchParams = useSearchParams()
+
+	const codeExchangeError = useMemo(() => {
+		if (!searchParams) return ''
+		return searchParams.get('error_description')
+	}, [searchParams])
 
 	const form = useForm<z.infer<typeof SignUpFormSchema>>({
 		mode: 'onChange',
@@ -47,9 +54,11 @@ export default function UserSignUpForm({
 	const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false)
 	const isLoading = form.formState.isSubmitting
 	const onSubmit = async ({ email, password }: z.infer<typeof FormSchema>) => {
-		const { error } = await signup({ email, password })
-		if (error) {
-			setSubmitError(error.message)
+		const response = await signup({ email, password })
+		console.log(response)
+		if (response) {
+			// setSubmitError(error.message)
+			setSubmitError('An email confirmation has been sent.')
 			form.reset()
 			return
 		}
@@ -145,17 +154,33 @@ export default function UserSignUpForm({
 							)}
 						/>
 
+						{submitError && <FormMessage>{submitError}</FormMessage>}
+
 						<button
 							type="submit"
 							className={cn(buttonVariants())}
 							disabled={isLoading || isGitHubLoading}
 						>
 							{isLoading && <Loader2 className="mr-2 size-4 animate-spin" />}
-							Sign In with Email
+							Sign In
 						</button>
 					</div>
 				</form>
 			</Form>
+
+			{(confirmation || codeExchangeError) && (
+				<>
+					<Alert>
+						{!codeExchangeError && <MailCheck className="h-4 w-4" />}
+						<AlertTitle>
+							{codeExchangeError ? 'Invalid Link' : 'Check your email.'}
+						</AlertTitle>
+						<AlertDescription>
+							{codeExchangeError || 'An email confirmation has been sent.'}
+						</AlertDescription>
+					</Alert>
+				</>
+			)}
 
 			<div className="relative">
 				<div className="absolute inset-0 flex items-center">
