@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useMemo, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { useSearchParams } from 'next/navigation'
+import { useForm } from 'react-hook-form'
 
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -31,7 +31,6 @@ export default function UserSignUpForm({
 	className,
 	...props
 }: UserSignUpFormProps) {
-	const router = useRouter()
 	const [submitError, setSubmitError] = useState('')
 	const [confirmation, setConfirmation] = useState(false)
 	const searchParams = useSearchParams()
@@ -53,12 +52,13 @@ export default function UserSignUpForm({
 
 	const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false)
 	const isLoading = form.formState.isSubmitting
+
 	const onSubmit = async ({ email, password }: z.infer<typeof FormSchema>) => {
 		const response = await signup({ email, password })
-		console.log(response)
-		if (response) {
-			// setSubmitError(error.message)
-			setSubmitError('An email confirmation has been sent.')
+
+		if ('error' in response && response.error.message) {
+			setSubmitError(response.error.message)
+			// setSubmitError('An email confirmation has been sent.')
 			form.reset()
 			return
 		}
@@ -81,106 +81,108 @@ export default function UserSignUpForm({
 					}}
 					onSubmit={form.handleSubmit(onSubmit)}
 				>
-					<div className="grid gap-4">
-						<FormField
-							control={form.control}
-							name="email"
-							render={({ field }) => (
-								<FormItem>
-									{/* <FormLabel>Email</FormLabel> */}
-									<FormControl>
-										<Input
-											id="email"
-											placeholder="name@example.com"
-											type="email"
-											autoCapitalize="none"
-											autoComplete="email"
-											autoCorrect="off"
-											disabled={isLoading || isGitHubLoading}
-											{...field}
-										/>
-									</FormControl>
-									{/* <FormDescription>This is your email address.</FormDescription> */}
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+					{!confirmation && !codeExchangeError && (
+						<div className="grid gap-4">
+							<FormField
+								control={form.control}
+								name="email"
+								render={({ field }) => (
+									<FormItem>
+										{/* <FormLabel>Email</FormLabel> */}
+										<FormControl>
+											<Input
+												id="email"
+												placeholder="name@example.com"
+												type="email"
+												autoCapitalize="none"
+												autoComplete="email"
+												autoCorrect="off"
+												disabled={isLoading || isGitHubLoading}
+												{...field}
+											/>
+										</FormControl>
+										{/* <FormDescription>This is your email address.</FormDescription> */}
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 
-						<FormField
-							control={form.control}
-							name="password"
-							render={({ field }) => (
-								<FormItem>
-									{/* <FormLabel>Password</FormLabel> */}
-									<FormControl>
-										<Input
-											id="password"
-											placeholder="Enter a password"
-											type="password"
-											autoCapitalize="none"
-											autoComplete="password"
-											autoCorrect="off"
-											disabled={isLoading || isGitHubLoading}
-											{...field}
-										/>
-									</FormControl>
-									{/* <FormDescription>This is your password.</FormDescription> */}
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+							<FormField
+								control={form.control}
+								name="password"
+								render={({ field }) => (
+									<FormItem>
+										{/* <FormLabel>Password</FormLabel> */}
+										<FormControl>
+											<Input
+												id="password"
+												placeholder="Enter a password"
+												type="password"
+												autoCapitalize="none"
+												autoComplete="password"
+												autoCorrect="off"
+												disabled={isLoading || isGitHubLoading}
+												{...field}
+											/>
+										</FormControl>
+										{/* <FormDescription>This is your password.</FormDescription> */}
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 
-						<FormField
-							control={form.control}
-							name="confirmPassword"
-							render={({ field }) => (
-								<FormItem>
-									{/* <FormLabel>Confirm password</FormLabel> */}
-									<FormControl>
-										<Input
-											id="confirmPassword"
-											placeholder="Confirm your password"
-											type="password"
-											autoCapitalize="none"
-											autoComplete="password"
-											autoCorrect="off"
-											disabled={isLoading || isGitHubLoading}
-											{...field}
-										/>
-									</FormControl>
-									{/* <FormDescription>Confirm your password.</FormDescription> */}
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+							<FormField
+								control={form.control}
+								name="confirmPassword"
+								render={({ field }) => (
+									<FormItem>
+										{/* <FormLabel>Confirm password</FormLabel> */}
+										<FormControl>
+											<Input
+												id="confirmPassword"
+												placeholder="Confirm your password"
+												type="password"
+												autoCapitalize="none"
+												autoComplete="password"
+												autoCorrect="off"
+												disabled={isLoading || isGitHubLoading}
+												{...field}
+											/>
+										</FormControl>
+										{/* <FormDescription>Confirm your password.</FormDescription> */}
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 
-						{submitError && <FormMessage>{submitError}</FormMessage>}
+							{submitError && <FormMessage>{submitError}</FormMessage>}
 
-						<button
-							type="submit"
-							className={cn(buttonVariants())}
-							disabled={isLoading || isGitHubLoading}
-						>
-							{isLoading && <Loader2 className="mr-2 size-4 animate-spin" />}
-							Sign In
-						</button>
-					</div>
+							<button
+								type="submit"
+								className={cn(buttonVariants())}
+								disabled={isLoading || isGitHubLoading}
+							>
+								{isLoading && <Loader2 className="mr-2 size-4 animate-spin" />}
+								Sign Up
+							</button>
+						</div>
+					)}
+
+					{(confirmation || codeExchangeError) && (
+						<>
+							<Alert>
+								{!codeExchangeError && <MailCheck className="h-4 w-4" />}
+								<AlertTitle>
+									{codeExchangeError ? 'Invalid Link' : 'Check your email.'}
+								</AlertTitle>
+								<AlertDescription>
+									{codeExchangeError || 'An email confirmation has been sent.'}
+								</AlertDescription>
+							</Alert>
+						</>
+					)}
 				</form>
 			</Form>
-
-			{(confirmation || codeExchangeError) && (
-				<>
-					<Alert>
-						{!codeExchangeError && <MailCheck className="h-4 w-4" />}
-						<AlertTitle>
-							{codeExchangeError ? 'Invalid Link' : 'Check your email.'}
-						</AlertTitle>
-						<AlertDescription>
-							{codeExchangeError || 'An email confirmation has been sent.'}
-						</AlertDescription>
-					</Alert>
-				</>
-			)}
 
 			<div className="relative">
 				<div className="absolute inset-0 flex items-center">

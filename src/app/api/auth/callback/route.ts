@@ -1,5 +1,5 @@
 import { type EmailOtpType } from '@supabase/supabase-js'
-import { type NextRequest, NextResponse } from 'next/server'
+import { type NextRequest } from 'next/server'
 
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 		})
 		if (!error) {
 			// redirect user to specified redirect URL or root of app
-			redirect(next)
+			redirect('/dashboard')
 		}
 	}
 

@@ -34,7 +34,7 @@ const SignUpPage = () => {
 						alt="Yggdrasil logo"
 						width={50}
 						height={50}
-						className="mx-auto h-16 w-16"
+						className="mx-auto h-24 w-24"
 					/>
 					<h1 className="text-2xl font-semibold tracking-tight">
 						Welcome to Yggdrasil
