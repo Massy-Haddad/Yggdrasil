@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useMemo, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { login } from '@/lib/server-actions/auth-actions'
-import { FormSchema } from '@/lib/types'
+import { signup } from '@/lib/server-actions/auth-actions'
+import { FormSchema, SignUpFormSchema } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
 import {
@@ -24,45 +24,38 @@ import { Loader2 } from 'lucide-react'
 import { GitHubLogoIcon } from '@radix-ui/react-icons'
 import { buttonVariants } from '@/components/ui/button'
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface UserSignUpFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export default function UserAuthForm({
+export default function UserSignUpForm({
 	className,
 	...props
-}: UserAuthFormProps) {
+}: UserSignUpFormProps) {
 	const router = useRouter()
 	const [submitError, setSubmitError] = useState('')
 
-	const form = useForm<z.infer<typeof FormSchema>>({
+	const form = useForm<z.infer<typeof SignUpFormSchema>>({
 		mode: 'onChange',
-		resolver: zodResolver(FormSchema),
+		resolver: zodResolver(SignUpFormSchema),
 		defaultValues: {
 			email: '',
 			password: '',
+			confirmPassword: '',
 		},
 	})
 
+	const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false)
 	const isLoading = form.formState.isSubmitting
 
-	// const [isLoading, setIsLoading] = React.useState<boolean>(
-	// 	form.formState.isSubmitting
-	// )
-	const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false)
-
-	const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (
-		formData
-	) => {
-		const error = await login(formData)
-
+	const onSubmit = async ({ email, password }: z.infer<typeof FormSchema>) => {
+		const { error } = await signup({ email, password })
 		if (error) {
-			form.reset()
 			setSubmitError(error.message)
+			form.reset()
+			return
 		}
-
-		router.replace('/dashboard')
 	}
 
-	async function onSignInGithub() {
+	async function onSignUpGithub() {
 		setIsGitHubLoading(true)
 		// TODO: Add signin using preferred provider
 		await new Promise((resolve) => setTimeout(resolve, 1000))
@@ -84,7 +77,7 @@ export default function UserAuthForm({
 							name="email"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Email</FormLabel>
+									{/* <FormLabel>Email</FormLabel> */}
 									<FormControl>
 										<Input
 											id="email"
@@ -108,7 +101,7 @@ export default function UserAuthForm({
 							name="password"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Password</FormLabel>
+									{/* <FormLabel>Password</FormLabel> */}
 									<FormControl>
 										<Input
 											id="password"
@@ -122,6 +115,30 @@ export default function UserAuthForm({
 										/>
 									</FormControl>
 									{/* <FormDescription>This is your password.</FormDescription> */}
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name="confirmPassword"
+							render={({ field }) => (
+								<FormItem>
+									{/* <FormLabel>Confirm password</FormLabel> */}
+									<FormControl>
+										<Input
+											id="confirmPassword"
+											placeholder="Confirm your password"
+											type="password"
+											autoCapitalize="none"
+											autoComplete="password"
+											autoCorrect="off"
+											disabled={isLoading || isGitHubLoading}
+											{...field}
+										/>
+									</FormControl>
+									{/* <FormDescription>Confirm your password.</FormDescription> */}
 									<FormMessage />
 								</FormItem>
 							)}
@@ -154,7 +171,7 @@ export default function UserAuthForm({
 				type="button"
 				className={cn(buttonVariants({ variant: 'outline' }))}
 				onClick={() => {
-					onSignInGithub()
+					onSignUpGithub()
 				}}
 				disabled={isLoading || isGitHubLoading}
 			>

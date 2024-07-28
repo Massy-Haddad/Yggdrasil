@@ -1,22 +1,18 @@
-'use client'
-
-import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { Metadata } from 'next'
 
-import * as z from 'zod'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-
-import { FormSchema } from '@/lib/types'
-import { Form } from '@/components/ui/form'
-import { ChevronLeft } from 'lucide-react'
-import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { UserAuthForm } from '@/components'
+import { ChevronLeft } from 'lucide-react'
+import { UserSignUpForm } from '@/components'
+import { buttonVariants } from '@/components/ui/button'
 
-const LoginPage = () => {
+export const metadata: Metadata = {
+	title: 'Sign Up | Yggdrasil',
+	description: 'Sign Up for Yggdrasil',
+}
+
+const SignUpPage = () => {
 	return (
 		<div className="container flex h-screen w-screen flex-col items-center justify-center">
 			<Link
@@ -33,19 +29,27 @@ const LoginPage = () => {
 			</Link>
 			<div className="mx-auto flex w-full flex-col justify-center gap-6 sm:w-[350px]">
 				<div className="flex flex-col gap-2 text-center">
-					{/* <Icons.logo className="mx-auto h-6 w-6" /> */}
+					<Image
+						src="/logo.png"
+						alt="Yggdrasil logo"
+						width={50}
+						height={50}
+						className="mx-auto h-16 w-16"
+					/>
 					<h1 className="text-2xl font-semibold tracking-tight">
-						Welcome back
+						Welcome to Yggdrasil
 					</h1>
-					<p className="text-muted-foreground text-sm">Login to your account</p>
+					<p className="text-muted-foreground text-sm">
+						Sign up for an account
+					</p>
 				</div>
-				<UserAuthForm />
+				<UserSignUpForm />
 				<p className="text-muted-foreground px-8 text-center text-sm">
 					<Link
-						href="/register"
+						href="/signin"
 						className="hover:text-brand underline underline-offset-4"
 					>
-						Don&apos;t have an account? Sign Up
+						Already have an account? Sign In
 					</Link>
 				</p>
 			</div>
@@ -53,4 +57,4 @@ const LoginPage = () => {
 	)
 }
 
-export default LoginPage
+export default SignUpPage
