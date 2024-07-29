@@ -1,4 +1,6 @@
 export { default as Input } from './input'
+
+// Magic UI Components
 export { default as Meteors } from './meteors'
 export { default as Particles } from './particles'
 export { default as BorderBeam } from './border-beam'
