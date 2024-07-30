@@ -10,6 +10,7 @@ import React, {
 } from 'react'
 import { File, Folder, workspace } from '../supabase/supabase.types'
 import { usePathname } from 'next/navigation'
+import { getFiles } from '../supabase/queries'
 
 export type appFoldersType = Folder & { files: File[] | [] }
 export type appWorkspacesType = workspace & {
@@ -119,8 +120,8 @@ const appReducer = (
 							...workspace,
 							folders: action.payload.folders.sort(
 								(a, b) =>
-									new Date(a.created_at).getTime() -
-									new Date(b.created_at).getTime()
+									new Date(a.createdAt).getTime() -
+									new Date(b.createdAt).getTime()
 							),
 						}
 					}
@@ -135,8 +136,8 @@ const appReducer = (
 						...workspace,
 						folders: [...workspace.folders, action.payload.folder].sort(
 							(a, b) =>
-								new Date(a.created_at).getTime() -
-								new Date(b.created_at).getTime()
+								new Date(a.createdAt).getTime() -
+								new Date(b.createdAt).getTime()
 						),
 					}
 				}),
@@ -208,8 +209,8 @@ const appReducer = (
 										...folder,
 										files: [...folder.files, action.payload.file].sort(
 											(a, b) =>
-												new Date(a.created_at).getTime() -
-												new Date(b.created_at).getTime()
+												new Date(a.createdAt).getTime() -
+												new Date(b.createdAt).getTime()
 										),
 									}
 								}
@@ -319,6 +320,22 @@ const AppStateProvider: React.FC<AppStateProviderProps> = ({ children }) => {
 				return urlSegments[3]
 			}
 	}, [pathname])
+
+	useEffect(() => {
+		if (!folderId || !workspaceId) return
+		const fetchFiles = async () => {
+			const { error: filesError, data } = await getFiles(folderId)
+			if (filesError) {
+				console.log(filesError)
+			}
+			if (!data) return
+			dispatch({
+				type: 'SET_FILES',
+				payload: { workspaceId, files: data, folderId },
+			})
+		}
+		fetchFiles()
+	}, [folderId, workspaceId])
 
 	useEffect(() => {
 		console.log('App State Changed', state)

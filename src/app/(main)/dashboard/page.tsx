@@ -1,8 +1,9 @@
 import { redirect } from 'next/navigation'
-import { createClient } from '@/utils/supabase/server'
+
 import db from '@/lib/supabase/db'
-import { DashboardSetup } from '@/components/dashboard-setup'
+import { createClient } from '@/utils/supabase/server'
 import { getUserSubscriptionStatus } from '@/lib/supabase/queries'
+import { DashboardSetup } from '@/components/dashboard-setup'
 
 const DashboardPage = async () => {
 	const supabase = createClient()
@@ -16,7 +17,7 @@ const DashboardPage = async () => {
 	}
 
 	const workspace = await db.query.workspaces.findFirst({
-		where: (workspace, { eq }) => eq(workspace.workspace_owner, user.id),
+		where: (workspace, { eq }) => eq(workspace.workspaceOwner, user.id),
 	})
 
 	const { data: subscription, error: subscriptionError } =
@@ -26,15 +27,7 @@ const DashboardPage = async () => {
 
 	if (!workspace)
 		return (
-			<div
-				className="bg-background
-			h-screen
-			w-screen
-			flex
-			justify-center
-			items-center
-	  "
-			>
+			<div className="bg-background h-screen w-screen flex justify-center items-center">
 				<DashboardSetup user={user} subscription={subscription} />
 			</div>
 		)

@@ -6,7 +6,7 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = async ({ children, params }) => {
-	return <main className="flex over-hidden h-screen">{children}</main>
+	return <main className="flex overflow-hidden h-screen">{children}</main>
 }
 
 export default Layout

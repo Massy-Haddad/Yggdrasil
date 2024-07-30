@@ -16,7 +16,7 @@ import {
 	CardTitle,
 } from '../ui/card'
 import EmojiPicker from '@/components/global/emoji-picker'
-import { Input } from '@/components/ui'
+import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
@@ -83,14 +83,14 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
 		try {
 			const newWorkspace: workspace = {
 				data: null,
-				created_at: new Date().toISOString(),
-				icon_id: selectedEmoji,
+				createdAt: new Date().toISOString(),
+				iconId: selectedEmoji,
 				id: workspaceUUID,
-				in_trash: '',
+				inTrash: '',
 				title: value.workspaceName,
-				workspace_owner: user.id,
+				workspaceOwner: user.id,
 				logo: filePath || null,
-				banner_url: '',
+				bannerUrl: '',
 			}
 			const { data, error: createError } = await createWorkspace(newWorkspace)
 			if (createError) {
@@ -121,12 +121,7 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
 	}
 
 	return (
-		<Card
-			className="w-[800px]
-        h-screen
-        sm:h-auto
-    "
-		>
+		<Card className="w-[800px] h-screen sm:h-auto">
 			<CardHeader>
 				<CardTitle>Create A Workspace</CardTitle>
 				<CardDescription>
@@ -137,11 +132,7 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
 			<CardContent>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<div className="flex flex-col gap-4">
-						<div
-							className="flex
-              items-center
-              gap-4"
-						>
+						<div className="flex items-center gap-4">
 							<div className="text-5xl">
 								<EmojiPicker getValue={(emoji: any) => setSelectedEmoji(emoji)}>
 									{selectedEmoji}
@@ -150,9 +141,7 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
 							<div className="w-full ">
 								<Label
 									htmlFor="workspaceName"
-									className="text-sm
-                    text-muted-foreground
-                  "
+									className="text-sm text-muted-foreground"
 								>
 									Name
 								</Label>
@@ -171,12 +160,7 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
 							</div>
 						</div>
 						<div>
-							<Label
-								htmlFor="logo"
-								className="text-sm
-                    text-muted-foreground
-                  "
-							>
+							<Label htmlFor="logo" className="text-sm text-muted-foreground">
 								Workspace Logo
 							</Label>
 							<Input
@@ -193,12 +177,7 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
 								{errors?.logo?.message?.toString()}
 							</small>
 							{subscription?.status !== 'active' && (
-								<small
-									className="
-                    text-muted-foreground
-                    block
-                "
-								>
+								<small className="text-muted-foreground block">
 									To customize your workspace, you need to be on a Pro Plan
 								</small>
 							)}

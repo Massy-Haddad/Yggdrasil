@@ -19,11 +19,12 @@ import {
 	FormLabel,
 	FormDescription,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui'
-import { Loader2, MailCheck } from 'lucide-react'
-import { GitHubLogoIcon } from '@radix-ui/react-icons'
+import { Input } from '@/components/ui/input'
 import { buttonVariants } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+
+import { Loader2, MailCheck } from 'lucide-react'
+import { GitHubLogoIcon } from '@radix-ui/react-icons'
 
 interface UserSignUpFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 

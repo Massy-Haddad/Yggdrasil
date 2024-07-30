@@ -1,11 +1,7 @@
-import { config } from 'dotenv'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { cookies } from 'next/headers'
-
-config({ path: '.env' })
 
 export function createClient() {
-	const cookieStore = cookies()
+	const cookieStore = require('next/headers').cookies()
 
 	return createServerClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
