@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import './globals.css'
 import { twMerge } from 'tailwind-merge'
 import { DM_Sans } from 'next/font/google'
+import { Toaster } from '@/components/ui/toaster'
 
 import { ThemeProvider } from '@/components/theme-provider'
-import { Toaster } from '@/components/ui/toaster'
 import AppStateProvider from '@/lib/providers/state-provider'
 import { SupabaseUserProvider } from '@/lib/providers/supabase-user-provider'
 
@@ -23,7 +23,6 @@ export const metadata: Metadata = {
 		'productivity',
 		'personal dashboard',
 	],
-	authors: [{ name: 'Next.js Team', url: 'https://nextjs.org' }],
 }
 
 export default function RootLayout({
@@ -32,18 +31,13 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang="en" suppressHydrationWarning>
-			<body
-				className={twMerge(
-					'bg-background min-h-screen font-sans antialiased overflow-x-hidden',
-					inter.className
-				)}
-			>
+		<html lang="en">
+			<body className={twMerge('bg-background', inter.className)}>
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="dark"
 					enableSystem
-					disableTransitionOnChange
+					// disableTransitionOnChange
 				>
 					<AppStateProvider>
 						<SupabaseUserProvider>

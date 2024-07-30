@@ -12,7 +12,7 @@ import { createClient } from '@/utils/supabase/server'
 
 import { twMerge } from 'tailwind-merge'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { WorkspaceDropdown } from '@/components/sidebar'
+import { WorkspaceDropdown, PlanUsage } from '@/components/sidebar'
 
 interface SidebarProps {
 	params: { workspaceId: string }
@@ -65,10 +65,10 @@ const Sidebar: FC<SidebarProps> = async ({ params, className }) => {
 						...sharedWorkspaces,
 					].find((workspace) => workspace.id === params.workspaceId)}
 				/>
-				{/* <PlanUsage
+				<PlanUsage
 					foldersLength={workspaceFolderData?.length || 0}
 					subscription={subscriptionData}
-				/> */}
+				/>
 				{/* <NativeNavigation myWorkspaceId={params.workspaceId} /> */}
 				{/* <ScrollArea className="overflow-scroll relative h-[450px]">
 					<div className="pointer-events-none w-full absolute bottom-0 h-20 bg-gradient-to-t from-background to-transparent z-40" />

@@ -30,33 +30,17 @@ const SelectedWorkspace: React.FC<SelectedWorkspaceProps> = ({
 			onClick={() => {
 				if (onClick) onClick(workspace)
 			}}
-			className="flex 
-      rounded-md 
-      hover:bg-muted 
-      transition-all 
-      flex-row 
-      p-2 
-      gap-4 
-      justify-center 
-      cursor-pointer 
-      items-center 
-      my-2"
+			className="flex relative rounded-md hover:bg-muted transition-all flex-row p-2 gap-3 justify-center cursor-pointer items-center my-2"
 		>
 			<Image
 				src={workspaceLogo}
 				alt="workspace logo"
 				width={26}
 				height={26}
-				objectFit="cover"
+				className="object-cover rounded-full"
 			/>
 			<div className="flex flex-col">
-				<p
-					className="text-lg 
-        w-[170px] 
-        overflow-hidden 
-        overflow-ellipsis 
-        whitespace-nowrap"
-				>
+				<p className="text-lg w-[170px] overflow-hidden overflow-ellipsis whitespace-nowrap">
 					{workspace.title}
 				</p>
 			</div>

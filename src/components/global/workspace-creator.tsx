@@ -146,39 +146,19 @@ const WorkspaceCreator = () => {
 						<span className="text-sm text-muted-foreground">
 							Collaborators {collaborators.length || ''}
 						</span>
-						<ScrollArea
-							className="
-            h-[120px]
-            overflow-y-auto
-            w-full
-            rounded-md
-            border
-            border-muted-foreground/20"
-						>
+						<ScrollArea className=" h-[120px] overflow-y-auto w-full rounded-md border border-muted-foreground/20">
 							{collaborators.length ? (
 								collaborators.map((c) => (
 									<div
-										className="p-4 flex
-                      justify-between
-                      items-center
-                "
 										key={c.id}
+										className="p-4 flex justify-between items-center"
 									>
 										<div className="flex gap-4 items-center">
 											<Avatar>
-												<AvatarImage src="/avatars/7.png" />
+												<AvatarImage src="/logo.png" />
 												<AvatarFallback>PJ</AvatarFallback>
 											</Avatar>
-											<div
-												className="text-sm 
-                          gap-2
-                          text-muted-foreground
-                          overflow-hidden
-                          overflow-ellipsis
-                          sm:w-[300px]
-                          w-[140px]
-                        "
-											>
+											<div className="text-sm gap-2 text-muted-foreground overflow-hidden overflow-ellipsis sm:w-[300px] w-[140px]">
 												{c.email}
 											</div>
 										</div>
@@ -191,16 +171,7 @@ const WorkspaceCreator = () => {
 									</div>
 								))
 							) : (
-								<div
-									className="absolute
-                  right-0 left-0
-                  top-0
-                  bottom-0
-                  flex
-                  justify-center
-                  items-center
-                "
-								>
+								<div className="absolute right-0 left-0 top-0 bottom-0 flex justify-center items-center">
 									<span className="text-muted-foreground text-sm">
 										You have no collaborators
 									</span>
