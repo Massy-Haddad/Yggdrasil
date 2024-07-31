@@ -1,4 +1,5 @@
-import React from 'react'
+import { getActiveProductsWithPrice } from '@/lib/supabase/queries'
+import { SubscriptionModalProvider } from '@/lib/providers/subscription-modal-provider'
 
 interface LayoutProps {
 	children: React.ReactNode
@@ -6,7 +7,15 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = async ({ children, params }) => {
-	return <main className="flex overflow-hidden h-screen">{children}</main>
+	const { data: products, error } = await getActiveProductsWithPrice()
+	if (error) throw new Error()
+	return (
+		<main className="flex over-hidden h-screen">
+			<SubscriptionModalProvider products={products}>
+				{children}
+			</SubscriptionModalProvider>
+		</main>
+	)
 }
 
 export default Layout

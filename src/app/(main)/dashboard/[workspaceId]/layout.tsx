@@ -1,19 +1,19 @@
-import { MobileSidebar, Sidebar } from '@/components/sidebar'
-import React from 'react'
+import { Sidebar, MobileSidebar } from '@/components/sidebar'
+import { FC, ReactNode } from 'react'
 
 interface LayoutProps {
-	children: React.ReactNode
+	children: ReactNode
 	params: any
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, params }) => {
+const Layout: FC<LayoutProps> = ({ children, params }) => {
 	return (
-		<main className="flex overflow-hidden h-screen w-screen">
+		<main className="flex overflow-hidden h-screen w-screen ">
 			<Sidebar params={params} />
 			<MobileSidebar>
 				<Sidebar params={params} className="w-screen inline-block sm:hidden" />
 			</MobileSidebar>
-			<div className="dark:boder-Neutrals-12/70 border-l-[1px] w-full relative overflow-scroll">
+			<div className="dark:boder-Neutrals-12/70 border-l-[1px] w-full relative overflow-scroll ">
 				{children}
 			</div>
 		</main>

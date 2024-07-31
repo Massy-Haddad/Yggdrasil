@@ -35,7 +35,7 @@ const UserCard: React.FC<UserCardProps> = async ({ subscription }) => {
 	}
 
 	return (
-		<article className="hidden sm:flex justify-between items-center px-2 py-2 dark:bg-Neutrals/neutrals-12 rounded-3xl ">
+		<article className="hidden sm:flex justify-between items-center px-2 py-2 dark:bg-primary-foreground rounded-3xl ">
 			<aside className="flex justify-center items-center gap-2">
 				<Avatar>
 					<AvatarImage src={profile.avatarUrl} />
@@ -52,7 +52,7 @@ const UserCard: React.FC<UserCardProps> = async ({ subscription }) => {
 					</small>
 				</div>
 			</aside>
-			<div className="flex items-center justify-center">
+			<div className="flex items-center justify-center gap-1">
 				<LogoutButton>
 					<LogOut />
 				</LogoutButton>

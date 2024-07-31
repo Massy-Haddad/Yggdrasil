@@ -23,6 +23,27 @@ export const createWorkspace = async (workspace: workspace) => {
 	}
 }
 
+export const getWorkspaceDetails = async (workspaceId: string) => {
+	const isValid = validate(workspaceId)
+	if (!isValid)
+		return {
+			data: [],
+			error: 'Error',
+		}
+
+	try {
+		const response = (await db
+			.select()
+			.from(workspaces)
+			.where(eq(workspaces.id, workspaceId))
+			.limit(1)) as workspace[]
+		return { data: response, error: null }
+	} catch (error) {
+		console.log(error)
+		return { data: [], error: 'Error' }
+	}
+}
+
 export const updateWorkspace = async (
 	workspace: Partial<workspace>,
 	workspaceId: string
@@ -178,6 +199,16 @@ export const getSharedWorkspaces = async (userId: string) => {
 	return sharedWorkspaces
 }
 
+export const createFile = async (file: File) => {
+	try {
+		await db.insert(files).values(file)
+		return { data: null, error: null }
+	} catch (error) {
+		console.log(error)
+		return { data: null, error: 'Error' }
+	}
+}
+
 export const getFiles = async (folderId: string) => {
 	const isValid = validate(folderId)
 	if (!isValid) return { data: null, error: 'Error' }
@@ -188,6 +219,19 @@ export const getFiles = async (folderId: string) => {
 			.orderBy(files.createdAt)
 			.where(eq(files.folderId, folderId))) as File[] | []
 		return { data: results, error: null }
+	} catch (error) {
+		console.log(error)
+		return { data: null, error: 'Error' }
+	}
+}
+
+export const updateFile = async (file: Partial<File>, fileId: string) => {
+	try {
+		const response = await db
+			.update(files)
+			.set(file)
+			.where(eq(files.id, fileId))
+		return { data: null, error: null }
 	} catch (error) {
 		console.log(error)
 		return { data: null, error: 'Error' }
@@ -252,5 +296,37 @@ export const getFolderDetails = async (folderId: string) => {
 		return { data: response, error: null }
 	} catch (error) {
 		return { data: [], error: 'Error' }
+	}
+}
+
+export const updateFolder = async (
+	folder: Partial<Folder>,
+	folderId: string
+) => {
+	try {
+		await db.update(folders).set(folder).where(eq(folders.id, folderId))
+		return { data: null, error: null }
+	} catch (error) {
+		console.log(error)
+		return { data: null, error: 'Error' }
+	}
+}
+
+export const getActiveProductsWithPrice = async () => {
+	try {
+		const res = await db.query.products.findMany({
+			where: (pro, { eq }) => eq(pro.active, true),
+
+			with: {
+				prices: {
+					where: (pri, { eq }) => eq(pri.active, true),
+				},
+			},
+		})
+		if (res.length) return { data: res, error: null }
+		return { data: [], error: null }
+	} catch (error) {
+		console.log(error)
+		return { data: [], error }
 	}
 }

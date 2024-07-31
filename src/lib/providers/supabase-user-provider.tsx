@@ -1,7 +1,7 @@
 'use client'
 
 import { AuthUser } from '@supabase/supabase-js'
-import { Subscription } from '../supabase/supabase.types'
+import { Subscription } from '@/lib/supabase/supabase.types'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { getUserSubscriptionStatus } from '@/lib/supabase/queries'
