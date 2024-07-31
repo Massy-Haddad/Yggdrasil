@@ -3,13 +3,14 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
-
 import { v4 } from 'uuid'
+
 import { postData } from '@/lib/utils'
 import { createClient } from '@/utils/supabase/client'
 import { useAppState } from '@/lib/providers/state-provider'
 import { User, workspace } from '@/lib/supabase/supabase.types'
 import { useSupabaseUser } from '@/lib/providers/supabase-user-provider'
+import { useSubscriptionModal } from '@/lib/providers/subscription-modal-provider'
 
 import {
 	addCollaborators,
@@ -17,6 +18,7 @@ import {
 	getCollaborators,
 	removeCollaborators,
 	updateWorkspace,
+	findUser,
 } from '@/lib/supabase/queries'
 import CollaboratorSearch from '../global/collaborator-search'
 
@@ -25,7 +27,6 @@ import {
 	CreditCard,
 	ExternalLink,
 	Lock,
-	LogOut,
 	Plus,
 	Share,
 	User2Icon,
@@ -63,21 +64,22 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 const SettingsForm = () => {
 	const { toast } = useToast()
 	const { user, subscription } = useSupabaseUser()
-	//const { open, setOpen } = useSubscriptionModal();
+	const { open, setOpen } = useSubscriptionModal()
 	const router = useRouter()
 	const supabase = createClient()
+
 	const { state, workspaceId, dispatch } = useAppState()
 	const [permissions, setPermissions] = useState('private')
 	const [collaborators, setCollaborators] = useState<User[] | []>([])
 	const [openAlertMessage, setOpenAlertMessage] = useState(false)
 	const [workspaceDetails, setWorkspaceDetails] = useState<workspace>()
 	const titleTimerRef = useRef<ReturnType<typeof setTimeout>>()
+	const [userAvatar, setUserAvatar] = useState('')
 	const [uploadingProfilePic, setUploadingProfilePic] = useState(false)
 	const [uploadingLogo, setUploadingLogo] = useState(false)
 	const [loadingPortal, setLoadingPortal] = useState(false)
 
 	//WIP PAYMENT PORTAL
-
 	const redirectToCustomerPortal = async () => {
 		setLoadingPortal(true)
 		try {
@@ -91,11 +93,32 @@ const SettingsForm = () => {
 		}
 		setLoadingPortal(false)
 	}
+
+	//find user details
+	useEffect(() => {
+		if (!user) return
+
+		const fetchUserDetails = async () => {
+			const response = await findUser(user.id)
+			if (response?.avatarUrl) {
+				setUserAvatar(response.avatarUrl)
+				const path = supabase.storage
+					.from('avatars')
+					.getPublicUrl(response.avatarUrl)?.data.publicUrl
+
+				setUserAvatar(path)
+				console.log('path', path)
+			}
+		}
+
+		fetchUserDetails()
+	}, [user])
+
 	//addcollborators
 	const addCollaborator = async (profile: User) => {
 		if (!workspaceId) return
 		if (subscription?.status !== 'active' && collaborators.length >= 2) {
-			//setOpen(true);
+			setOpen(true)
 			return
 		}
 		await addCollaborators([profile], workspaceId)
@@ -124,7 +147,7 @@ const SettingsForm = () => {
 		})
 		if (titleTimerRef.current) clearTimeout(titleTimerRef.current)
 		titleTimerRef.current = setTimeout(async () => {
-			// await updateWorkspace({ title: e.target.value }, workspaceId);
+			await updateWorkspace({ title: e.target.value }, workspaceId)
 		}, 500)
 	}
 
@@ -168,9 +191,7 @@ const SettingsForm = () => {
 		} else setPermissions(val)
 	}
 
-	//CHALLENGE fetching avatar details
 	//WIP Payment Portal redirect
-
 	useEffect(() => {
 		const showingWorkspace = state.workspaces.find(
 			(workspace) => workspace.id === workspaceId
@@ -315,42 +336,22 @@ const SettingsForm = () => {
 						</div>
 					</div>
 				)}
-				<Alert variant={'destructive'}>
-					<AlertDescription>
-						Warning! deleting you workspace will permanantly delete all data
-						related to this workspace.
-					</AlertDescription>
-					<Button
-						type="submit"
-						size={'sm'}
-						variant={'destructive'}
-						className="mt-4 text-sm bg-destructive/40 border-2 border-destructive"
-						onClick={async () => {
-							if (!workspaceId) return
-							await deleteWorkspace(workspaceId)
-							toast({ title: 'Successfully deleted your workspae' })
-							dispatch({ type: 'DELETE_WORKSPACE', payload: workspaceId })
-							router.replace('/dashboard')
-						}}
-					>
-						Delete Workspace
-					</Button>
-				</Alert>
 				<p className="flex items-center gap-2 mt-6">
 					<UserIcon size={20} /> Profile
 				</p>
 				<Separator />
 				<div className="flex items-center">
 					<Avatar>
-						<AvatarImage src={''} />
+						<AvatarImage src={userAvatar} />
 						<AvatarFallback>
 							<User2Icon />
 						</AvatarFallback>
 					</Avatar>
 					<div className="flex flex-col ml-6">
-						<small className="text-muted-foreground cursor-not-allowed">
+						<small className="text-muted-foreground cursor-not-allowed sm:text-base text-md">
 							{user ? user.email : ''}
 						</small>
+						<Separator />
 						<Label
 							htmlFor="profilePicture"
 							className="text-sm text-muted-foreground"
@@ -362,16 +363,11 @@ const SettingsForm = () => {
 							type="file"
 							accept="image/*"
 							placeholder="Profile Picture"
-							// onChange={onChangeProfilePicture}
+							//onChange={onChangeProfilePicture}
 							disabled={uploadingProfilePic}
 						/>
 					</div>
 				</div>
-				<LogoutButton>
-					<div className="flex items-center">
-						<LogOut />
-					</div>
-				</LogoutButton>
 				<p className="flex items-center gap-2 mt-6">
 					<CreditCard size={20} /> Billing & Plan
 				</p>
@@ -407,13 +403,34 @@ const SettingsForm = () => {
 							size="sm"
 							variant={'secondary'}
 							className="text-sm"
-							//onClick={() => setOpen(true)}
+							onClick={() => setOpen(true)}
 						>
 							Start Plan
 						</Button>
 					</div>
 				)}
 			</>
+			<Alert variant={'destructive'}>
+				<AlertDescription>
+					Warning! deleting you workspace will permanantly delete all data
+					related to this workspace.
+				</AlertDescription>
+				<Button
+					type="submit"
+					size={'sm'}
+					variant={'destructive'}
+					className="mt-4 text-sm bg-destructive/40 border-2 border-destructive"
+					onClick={async () => {
+						if (!workspaceId) return
+						await deleteWorkspace(workspaceId)
+						toast({ title: 'Successfully deleted your workspae' })
+						dispatch({ type: 'DELETE_WORKSPACE', payload: workspaceId })
+						router.replace('/dashboard')
+					}}
+				>
+					Delete Workspace
+				</Button>
+			</Alert>
 			<AlertDialog open={openAlertMessage}>
 				<AlertDialogContent>
 					<AlertDialogHeader>

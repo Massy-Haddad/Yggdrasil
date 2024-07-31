@@ -225,6 +225,25 @@ export const getFiles = async (folderId: string) => {
 	}
 }
 
+export const getFileDetails = async (fileId: string) => {
+	const isValid = validate(fileId)
+	if (!isValid) {
+		data: []
+		error: 'Error'
+	}
+	try {
+		const response = (await db
+			.select()
+			.from(files)
+			.where(eq(files.id, fileId))
+			.limit(1)) as File[]
+		return { data: response, error: null }
+	} catch (error) {
+		console.log('🔴Error', error)
+		return { data: [], error: 'Error' }
+	}
+}
+
 export const updateFile = async (file: Partial<File>, fileId: string) => {
 	try {
 		const response = await db
@@ -269,6 +288,35 @@ export const removeCollaborators = async (
 				)
 	})
 }
+
+export const findUser = async (userId: string) => {
+	const response = await db.query.users.findFirst({
+		where: (u, { eq }) => eq(u.id, userId),
+	})
+	return response
+}
+
+// get the user details from the user id
+export const getUserDetails = async (userId: string) => {
+	const isValid = validate(userId)
+	if (!isValid) {
+		data: []
+		error: 'Error'
+	}
+
+	try {
+		const response = (await db
+			.select()
+			.from(users)
+			.where(eq(users.id, userId))
+			.limit(1)) as User[]
+		return { data: response, error: null }
+	} catch (error) {
+		console.log(error)
+		return { data: [], error: 'Error' }
+	}
+}
+
 
 export const getUsersFromSearch = async (email: string) => {
 	if (!email) return []
