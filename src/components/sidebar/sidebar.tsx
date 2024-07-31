@@ -11,6 +11,7 @@ import {
 import { createClient } from '@/utils/supabase/server'
 
 import {
+	UserCard,
 	PlanUsage,
 	NativeNavigation,
 	WorkspaceDropdown,
@@ -83,7 +84,7 @@ const Sidebar: FC<SidebarProps> = async ({ params, className }) => {
 					/>
 				</ScrollArea>
 			</div>
-			{/* <UserCard subscription={subscriptionData} /> */}
+			<UserCard subscription={subscriptionData} />
 		</aside>
 	)
 }
