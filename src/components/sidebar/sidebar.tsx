@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { redirect } from 'next/navigation'
 
 import {
@@ -10,9 +10,14 @@ import {
 } from '@/lib/supabase/queries'
 import { createClient } from '@/utils/supabase/server'
 
+import {
+	PlanUsage,
+	NativeNavigation,
+	WorkspaceDropdown,
+	FoldersDropdownList,
+} from '@/components/sidebar'
 import { twMerge } from 'tailwind-merge'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { WorkspaceDropdown, PlanUsage } from '@/components/sidebar'
 
 interface SidebarProps {
 	params: { workspaceId: string }
@@ -69,14 +74,14 @@ const Sidebar: FC<SidebarProps> = async ({ params, className }) => {
 					foldersLength={workspaceFolderData?.length || 0}
 					subscription={subscriptionData}
 				/>
-				{/* <NativeNavigation myWorkspaceId={params.workspaceId} /> */}
-				{/* <ScrollArea className="overflow-scroll relative h-[450px]">
+				<NativeNavigation myWorkspaceId={params.workspaceId} />
+				<ScrollArea className="overflow-scroll relative h-[450px]">
 					<div className="pointer-events-none w-full absolute bottom-0 h-20 bg-gradient-to-t from-background to-transparent z-40" />
 					<FoldersDropdownList
 						workspaceFolders={workspaceFolderData || []}
 						workspaceId={params.workspaceId}
 					/>
-				</ScrollArea> */}
+				</ScrollArea>
 			</div>
 			{/* <UserCard subscription={subscriptionData} /> */}
 		</aside>

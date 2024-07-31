@@ -23,6 +23,23 @@ export const createWorkspace = async (workspace: workspace) => {
 	}
 }
 
+export const updateWorkspace = async (
+	workspace: Partial<workspace>,
+	workspaceId: string
+) => {
+	if (!workspaceId) return
+	try {
+		await db
+			.update(workspaces)
+			.set(workspace)
+			.where(eq(workspaces.id, workspaceId))
+		return { data: null, error: null }
+	} catch (error) {
+		console.log(error)
+		return { data: null, error: 'Error' }
+	}
+}
+
 export const deleteWorkspace = async (workspaceId: string) => {
 	if (!workspaceId) return
 	await db.delete(workspaces).where(eq(workspaces.id, workspaceId))
@@ -39,6 +56,16 @@ export const getUserSubscriptionStatus = async (userId: string) => {
 	} catch (error) {
 		console.log(error)
 		return { data: null, error: `Error ${error}` }
+	}
+}
+
+export const createFolder = async (folder: Folder) => {
+	try {
+		const results = await db.insert(folders).values(folder)
+		return { data: null, error: null }
+	} catch (error) {
+		console.log(error)
+		return { data: null, error: 'Error' }
 	}
 }
 
@@ -89,6 +116,24 @@ export const getPrivateWorkspaces = async (userId: string) => {
 			)
 		)) as workspace[]
 	return privateWorkspaces
+}
+
+export const getCollaborators = async (workspaceId: string) => {
+	const response = await db
+		.select()
+		.from(collaborators)
+		.where(eq(collaborators.workspaceId, workspaceId))
+	if (!response.length) return []
+	const userInformation: Promise<User | undefined>[] = response.map(
+		async (user) => {
+			const exists = await db.query.users.findFirst({
+				where: (u, { eq }) => eq(u.id, user.userId),
+			})
+			return exists
+		}
+	)
+	const resolvedUsers = await Promise.all(userInformation)
+	return resolvedUsers.filter(Boolean) as User[]
 }
 
 export const getCollaboratingWorkspaces = async (userId: string) => {

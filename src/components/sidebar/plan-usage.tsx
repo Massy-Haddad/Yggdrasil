@@ -1,10 +1,13 @@
 'use client'
+
+import React, { useEffect, useState } from 'react'
+
 import { MAX_FOLDERS_FREE_PLAN } from '@/lib/constants'
 import { useAppState } from '@/lib/providers/state-provider'
 import { Subscription } from '@/lib/supabase/supabase.types'
-import React, { useEffect, useState } from 'react'
+
 import { Progress } from '@/components/ui/progress'
-import CypressDiamondIcon from '../icons/yggdrasilPageIcon'
+import { PlanUsageIcon } from '@/components/icons'
 
 interface PlanUsageProps {
 	foldersLength: number
@@ -33,7 +36,7 @@ const PlanUsage: React.FC<PlanUsageProps> = ({
 			{subscription?.status !== 'active' && (
 				<div className="flex gap-2 text-muted-foreground mb-2 items-center ">
 					<div className="h-4 w-4">
-						<CypressDiamondIcon />
+						<PlanUsageIcon />
 					</div>
 					<div className="flex justify-between w-full items-center ">
 						<div>Free Plan</div>
